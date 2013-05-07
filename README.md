@@ -6,8 +6,6 @@ This is my very first Python project.
 Commands:
 --------------
 
-**q** = quit
-
-**p** = pause
-
+**q** = quit  
+**p** = pause  
 **r** = restart
