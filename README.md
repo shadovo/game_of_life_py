@@ -7,5 +7,7 @@ Commands:
 --------------
 
 **q** = quit
+
 **p** = pause
+
 **r** = restart
