@@ -104,10 +104,10 @@ def create_stress_test():
 
 def game():
 	""" Start a game of life """
-	# cells = create_cells()
+	cells = create_cells()
 
 	# Create a stress test with a heavy starting pattern
-	cells = create_stress_test()
+	# cells = create_stress_test()
 	
 	render_board(cells)
 	q = -1
@@ -116,10 +116,18 @@ def game():
 		q = screen.getch()
 		if q == ord('p'):
 			time.sleep(5)
+		elif q == ord('r'):
+			break
 		update_cell_statuses(cells)
 		render_board(cells)
 		screen.refresh()
-		time.sleep(0.01)
+		time.sleep(0.05)
+	else:
+		curses.endwin()
+		exit()
+
+	game()
+
 
 game()
 curses.endwin()
