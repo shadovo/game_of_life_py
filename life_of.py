@@ -7,14 +7,16 @@ dims = screen.getmaxyx()
 curses.curs_set(0)
 curses.noecho()
 screen.nodelay(1)
-screen.border()
 
-char = 'X'
+char = '@'
 deadChar = ' '
+percentChanceOfLife = 20
 
 class Cell(object):
-	def __init__(self):
-		self.alive = bool(random.randrange(0, 100) < 20)
+	def __init__(self, y, x):
+		self.alive = bool(random.randrange(0, 100) < percentChanceOfLife)
+		self.y = y
+		self.x = x
 
 	def __repr__(self):
 		return self.alice
@@ -67,26 +69,39 @@ def should_cell_live(y, x, cells):
 
 def update_cell_statuses(cells):
 	""" Update the status of the cells for the next rendering """
+	changedCells = []
 	for y in range(0, len(cells)):
 		for x in range(0, len(cells[0])):
-			cells[y][x].alive = should_cell_live(y, x, cells)
+			previusState = cells[y][x].alive
+			newState = should_cell_live(y, x, cells)
+			if previusState != newState:
+				cells[y][x].alive = newState
+				changedCells.append(cells[y][x])
+	return changedCells
 
-def render_board(cells):
-	""" Render all alive cells to the board and remove the dead """
-	for y in range(1, len(cells)):
-		for x in range(1, len(cells[0])):
+def first_rendering(cells):
+	for y in range(0, len(cells)):
+		for x in range(0, len(cells[0])):
 			if cells[y][x].alive:
 				screen.addch(y, x, char)
 			else:
 				screen.addch(y, x, deadChar)
 
+def render_board(cells):
+	""" Render all alive cells to the board and remove the dead """
+	for cell in cells:
+		if cell.alive:
+			screen.addch(cell.y, cell.x, char)
+		else:
+			screen.addch(cell.y, cell.x, deadChar)
+
 def create_cells():
 	""" Create a random pattern of living cells """
 	cells = []
-	for i in range(0, dims[0]-1):
+	for y in range(0, dims[0]-1):
 		tempList = []
-		for n in range(0, dims[1]-2):
-			tempList.append(Cell())
+		for x in range(0, dims[1]):
+			tempList.append(Cell(y, x))
 		cells.append(tempList)
 	return cells
 
@@ -109,7 +124,7 @@ def game():
 	# Create a stress test with a heavy starting pattern
 	# cells = create_stress_test()
 	
-	render_board(cells)
+	first_rendering(cells)
 	q = -1
 	screen.refresh()
 	while q != ord('q'):
@@ -118,8 +133,8 @@ def game():
 			time.sleep(5)
 		elif q == ord('r'):
 			break
-		update_cell_statuses(cells)
-		render_board(cells)
+		changedCells = update_cell_statuses(cells)
+		render_board(changedCells)
 		screen.refresh()
 		time.sleep(0.05)
 	else:
