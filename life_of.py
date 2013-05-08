@@ -1,3 +1,7 @@
+ # Conway's Game of Life in Python
+ # by Oscar Rundh, @Shadovo
+ # April 6, 2013
+
 import curses
 import time
 import random
