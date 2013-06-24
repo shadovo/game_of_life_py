@@ -48,13 +48,13 @@ def cell_neighbour_count(y, x, cells):
 		count += 1
 	if is_cell_alive(y-1, x, cells): 
 		count += 1
-	if is_cell_alive(y+1, x, cells): 
+	if count < 4 and is_cell_alive(y+1, x, cells): 
 		count += 1
-	if is_cell_alive(y-1, x+1, cells): 
+	if count < 4 and is_cell_alive(y-1, x+1, cells): 
 		count += 1
-	if is_cell_alive(y, x+1, cells): 
+	if count < 4 and is_cell_alive(y, x+1, cells): 
 		count += 1
-	if is_cell_alive(y+ 1, x+1, cells): 
+	if count < 4 and is_cell_alive(y+ 1, x+1, cells): 
 		count += 1
 	return count
 
