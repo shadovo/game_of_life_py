@@ -27,14 +27,14 @@ class Cell(object):
 
 def is_cell_alive(y, x, cells):
 	""" Check if the cell is currently displaied as alive """
-	if y >= len(cells):
+	if y >= dims[0]-1:
 		y = 0
-	if x >= len(cells[0]):
+	if x >= dims[1]-2:
 		x = 0
 	if y < 0:
-		y = len(cells)-1
+		y = dims[0]-2
 	if x < 0:
-		x = len(cells[0])-1
+		x = dims[1]-3
 	return (screen.inch(y, x) == ord(char))
 
 def cell_neighbour_count(y, x, cells):
@@ -74,19 +74,21 @@ def should_cell_live(y, x, cells):
 def update_cell_statuses(cells):
 	""" Update the status of the cells for the next rendering """
 	changedCells = []
-	for y in range(0, len(cells)):
-		for x in range(0, len(cells[0])):
-			previusState = cells[y][x].alive
+	for y in range(0, dims[0]-1):
+		for x in range(0, dims[1]-2):
+			index = int(y * (dims[1]) + x) 
+			previusState = cells[index].alive
 			newState = should_cell_live(y, x, cells)
 			if previusState != newState:
-				cells[y][x].alive = newState
-				changedCells.append(cells[y][x])
+				cells[index].alive = newState
+				changedCells.append(cells[index])
 	return changedCells
 
 def first_rendering(cells):
-	for y in range(0, len(cells)):
-		for x in range(0, len(cells[0])):
-			if cells[y][x].alive:
+	for y in range(0, dims[0]-1):
+		for x in range(0, dims[1]):
+			index = int(y * (dims[1]) + x) 
+			if cells[index].alive:
 				screen.addch(y, x, char)
 			else:
 				screen.addch(y, x, deadChar)
@@ -103,23 +105,19 @@ def create_cells():
 	""" Create a random pattern of living cells """
 	cells = []
 	for y in range(0, dims[0]-1):
-		tempList = []
 		for x in range(0, dims[1]):
-			tempList.append(Cell(y, x))
-		cells.append(tempList)
+			cells.append(Cell(y, x))
 	return cells
 
-def create_stress_test():
-	""" A stress test with a heavy pattern, a staraight line full with living cells """
-	cells = []
-	for i in range(0, dims[0]-1):
-		tempList = []
-		for n in range(0, dims[1]-2):
-			tempCell = Cell()
-			tempCell.alive = bool(i == 20)
-			tempList.append(tempCell)
-		cells.append(tempList)
-	return cells	
+# def create_stress_test():
+# 	""" A stress test with a heavy pattern, a staraight line full with living cells """
+# 	cells = []
+# 	for y in range(0, dims[0]-1):
+# 		for x in range(0, dims[1]-2):
+# 			tempCell = Cell()
+# 			tempCell.alive = bool(i == 20)
+# 			cells.append(tempCell)
+# 	return cells	
 
 def game():
 	""" Start a game of life """
