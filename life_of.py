@@ -29,12 +29,12 @@ def is_cell_alive(y, x, cells):
 	""" Check if the cell is currently displaied as alive """
 	if y >= dims[0]-1:
 		y = 0
-	if x >= dims[1]-2:
+	if x >= dims[1]:
 		x = 0
 	if y < 0:
-		y = dims[0]-2
+		y = dims[0]-1
 	if x < 0:
-		x = dims[1]-3
+		x = dims[1]
 	return (screen.inch(y, x) == ord(char))
 
 def cell_neighbour_count(y, x, cells):
@@ -48,13 +48,13 @@ def cell_neighbour_count(y, x, cells):
 		count += 1
 	if is_cell_alive(y-1, x, cells): 
 		count += 1
-	if count < 4 and is_cell_alive(y+1, x, cells): 
+	if is_cell_alive(y+1, x, cells): 
 		count += 1
-	if count < 4 and is_cell_alive(y-1, x+1, cells): 
+	if is_cell_alive(y-1, x+1, cells): 
 		count += 1
-	if count < 4 and is_cell_alive(y, x+1, cells): 
+	if is_cell_alive(y, x+1, cells): 
 		count += 1
-	if count < 4 and is_cell_alive(y+ 1, x+1, cells): 
+	if is_cell_alive(y+ 1, x+1, cells): 
 		count += 1
 	return count
 
@@ -75,7 +75,7 @@ def update_cell_statuses(cells):
 	""" Update the status of the cells for the next rendering """
 	changedCells = []
 	for y in range(0, dims[0]-1):
-		for x in range(0, dims[1]-2):
+		for x in range(0, dims[1]):
 			index = int(y * (dims[1]) + x) 
 			previusState = cells[index].alive
 			newState = should_cell_live(y, x, cells)
@@ -109,22 +109,22 @@ def create_cells():
 			cells.append(Cell(y, x))
 	return cells
 
-# def create_stress_test():
-# 	""" A stress test with a heavy pattern, a staraight line full with living cells """
-# 	cells = []
-# 	for y in range(0, dims[0]-1):
-# 		for x in range(0, dims[1]-2):
-# 			tempCell = Cell()
-# 			tempCell.alive = bool(i == 20)
-# 			cells.append(tempCell)
-# 	return cells	
+def create_stress_test():
+	""" A stress test with a heavy pattern, a staraight line full with living cells """
+	cells = []
+	for y in range(0, dims[0]-1):
+		for x in range(0, dims[1]):
+			tempCell = Cell(y, x)
+			tempCell.alive = bool(y == int(dims[0]/2))
+			cells.append(tempCell)
+	return cells	
 
 def game():
 	""" Start a game of life """
-	cells = create_cells()
+	# cells = create_cells()
 
 	# Create a stress test with a heavy starting pattern
-	# cells = create_stress_test()
+	cells = create_stress_test()
 	
 	first_rendering(cells)
 	q = -1
